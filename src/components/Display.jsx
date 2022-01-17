@@ -1,5 +1,12 @@
 import { useState } from "react";
-const Display = ({ numbers, setNumbers, totalBetNum, setTotalBetNum }) => {
+const Display = ({
+  numbers,
+  setNumbers,
+  totalBetNum,
+  setTotalBetNum,
+  totalBetAmt,
+  setTotalBetAmt,
+}) => {
   const [searchValue, setSearchValue] = useState("");
   let totalDisplay = [...totalBetNum];
   totalDisplay = totalDisplay.filter((item) =>
@@ -10,6 +17,9 @@ const Display = ({ numbers, setNumbers, totalBetNum, setTotalBetNum }) => {
   const removeItem = (betnum) => {
     const newNumbers = numbers.filter((num) => num.id !== betnum.id);
     const copyTotalBetNum = [...totalBetNum];
+    let copyTotalBetAmt = totalBetAmt;
+    copyTotalBetAmt -= parseInt(betnum.betAmt);
+    setTotalBetAmt(copyTotalBetAmt);
     for (let i = 0; i < copyTotalBetNum.length; i++) {
       if (copyTotalBetNum[i].betNum === betnum.betNum) {
         copyTotalBetNum[i].betAmt = (
@@ -26,10 +36,11 @@ const Display = ({ numbers, setNumbers, totalBetNum, setTotalBetNum }) => {
   const handleClearAll = () => {
     setNumbers([]);
     setTotalBetNum([]);
+    setTotalBetAmt(0);
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-3">
       <div className="row">
         <div className="col-md-3 border-end border-success">
           <h3 className="text-muted fw-bold">စာရင်းမှတ်တမ်း</h3>
@@ -88,14 +99,23 @@ const Display = ({ numbers, setNumbers, totalBetNum, setTotalBetNum }) => {
               </li>
             ))}
           </ul>
+          <div className="row mt-2">
+            <div className="col">
+              <p className="fw-bold fs-5">
+                ရောင်းကြေးစုစုပေါင်း: {totalBetAmt}Ks
+              </p>
+            </div>
+            <div className="col">
+              <button
+                className="btn btn-danger float-end mb-3"
+                onClick={handleClearAll}
+              >
+                ရှင်းလင်းရန်
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-      <button
-        className="btn btn-danger float-end mb-3"
-        onClick={handleClearAll}
-      >
-        ရှင်းလင်းရန်
-      </button>
     </div>
   );
 };

@@ -6,6 +6,16 @@ import { useState, useEffect } from "react";
 function App() {
   const [numbers, setNumbers] = useState([]);
   const [totalBetNum, setTotalBetNum] = useState([]);
+  const [totalBetAmt, setTotalBetAmt] = useState(0);
+
+  useEffect(() => {
+    const totalAmt = JSON.parse(localStorage.getItem("totalAmt"));
+    setTotalBetAmt(totalAmt || 0);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("totalAmt", JSON.stringify(totalBetAmt));
+  }, [totalBetAmt]);
 
   useEffect(() => {
     const numb = JSON.parse(localStorage.getItem("numbers"));
@@ -32,12 +42,16 @@ function App() {
         setNumbers={setNumbers}
         totalBetNum={totalBetNum}
         setTotalBetNum={setTotalBetNum}
+        totalBetAmt={totalBetAmt}
+        setTotalBetAmt={setTotalBetAmt}
       />
       <Display
         numbers={numbers}
         setNumbers={setNumbers}
         totalBetNum={totalBetNum}
         setTotalBetNum={setTotalBetNum}
+        totalBetAmt={totalBetAmt}
+        setTotalBetAmt={setTotalBetAmt}
       />
     </div>
   );

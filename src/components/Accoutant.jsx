@@ -2,7 +2,14 @@ import { useState } from "react";
 import React from "react";
 import Joi from "joi-browser";
 
-const Accoutant = ({ numbers, setNumbers, totalBetNum, setTotalBetNum }) => {
+const Accoutant = ({
+  numbers,
+  setNumbers,
+  totalBetNum,
+  setTotalBetNum,
+  totalBetAmt,
+  setTotalBetAmt,
+}) => {
   const [inputNum, setInputNum] = useState("");
   const [inputAmt, setInputAmt] = useState("");
   const [inputErrors, setInputErrors] = useState({});
@@ -40,6 +47,9 @@ const Accoutant = ({ numbers, setNumbers, totalBetNum, setTotalBetNum }) => {
       return;
     }
     setInputErrors({});
+    let copyTotalBetAmt = totalBetAmt;
+    copyTotalBetAmt += parseInt(inputAmt);
+    setTotalBetAmt(copyTotalBetAmt);
     const totalNumberObj = {
       betNum: inputNum.trim(),
       betAmt: inputAmt.trim(),
