@@ -1,23 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Accoutant from "./components/Accoutant";
+import Display from "./components/Display";
+import { useState, useEffect } from "react";
 
 function App() {
+  const [numbers, setNumbers] = useState([]);
+  const [totalBetNum, setTotalBetNum] = useState([]);
+
+  useEffect(() => {
+    const numb = JSON.parse(localStorage.getItem("numbers"));
+    setNumbers(numb || []);
+  }, []);
+
+  useEffect(() => {
+    const totalNum = JSON.parse(localStorage.getItem("totalBetNum"));
+    setTotalBetNum(totalNum || []);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("totalBetNum", JSON.stringify(totalBetNum));
+  }, [totalBetNum]);
+
+  useEffect(() => {
+    localStorage.setItem("numbers", JSON.stringify(numbers));
+  }, [numbers]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Accoutant
+        numbers={numbers}
+        setNumbers={setNumbers}
+        totalBetNum={totalBetNum}
+        setTotalBetNum={setTotalBetNum}
+      />
+      <Display
+        numbers={numbers}
+        setNumbers={setNumbers}
+        totalBetNum={totalBetNum}
+        setTotalBetNum={setTotalBetNum}
+      />
     </div>
   );
 }
