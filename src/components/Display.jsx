@@ -90,7 +90,10 @@ const Display = ({ numbers, setNumbers, totalBetNum, setTotalBetNum }) => {
           </ul>
         </div>
       </div>
-      <button className="btn btn-danger float-end" onClick={handleClearAll}>
+      <button
+        className="btn btn-danger float-end mb-3"
+        onClick={handleClearAll}
+      >
         ရှင်းလင်းရန်
       </button>
     </div>
