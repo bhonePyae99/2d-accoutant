@@ -9,6 +9,9 @@ const Accoutant = ({
   setTotalBetNum,
   totalBetAmt,
   setTotalBetAmt,
+  userData,
+  setUserData,
+  setCurrentUser,
 }) => {
   const [inputNum, setInputNum] = useState("");
   const [inputAmt, setInputAmt] = useState("");
@@ -79,10 +82,24 @@ const Accoutant = ({
     setInputAmt("");
     inputRef.current.focus();
   };
+  //remove user
+  const removeUser = (item) => {
+    const newUserData = userData.filter((data) => data.id !== item.id);
+    setUserData(newUserData);
+  };
+
+  //see userData
+  const seeUserData = (item) => {
+    setNumbers(item.numbers);
+    setTotalBetAmt(item.totalBetAmt);
+    setTotalBetNum(item.totalBetNum);
+    setCurrentUser(item.name);
+  };
+
   return (
     <div className="container mt-5">
       <form className="row" onSubmit={addValue}>
-        <div className="col-md-6">
+        <div className="col-md-5">
           <label htmlFor="number" className="form-lable pb-2">
             နံပါတ်
           </label>
@@ -101,7 +118,7 @@ const Accoutant = ({
             }}
           />
         </div>
-        <div className="col-md-6">
+        <div className="col-md-5">
           <label htmlFor="number" className="form-lable pb-2">
             ငွေကြေး
           </label>
@@ -117,6 +134,60 @@ const Accoutant = ({
               inputErrors["betAmt"] ? "form-control is-invalid" : "form-control"
             }
           />
+        </div>
+        <div className="col-md-2 position-relative">
+          <button
+            className="btn btn-info position-absolute bottom-0"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasRight"
+            aria-controls="offcanvasRight"
+          >
+            စာရင်းမှတ်တမ်းများ
+          </button>
+          {/* offcanvas */}
+          <div
+            className="offcanvas offcanvas-end"
+            tabIndex="-1"
+            id="offcanvasRight"
+            aria-labelledby="offcanvasRightLabel"
+          >
+            <div className="offcanvas-header">
+              <h5 id="offcanvasRightLabel">စာရင်းမှတ်တမ်းများ</h5>
+              <button
+                type="button"
+                className="btn-close text-reset"
+                data-bs-dismiss="offcanvas"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="offcanvas-body">
+              <ul className="list-group">
+                {userData.map((item) => (
+                  <li
+                    className="list-group-item d-flex justify-content-between"
+                    key={item.id}
+                  >
+                    <strong
+                      onClick={() => {
+                        seeUserData(item);
+                      }}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {item.name}
+                    </strong>
+                    <i
+                      className="bi bi-x-lg fs-5 fw-bolder"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => {
+                        removeUser(item);
+                      }}
+                    ></i>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
         <div className="col-md-4 mt-3">
           <button type="submit" className="btn btn-primary">
