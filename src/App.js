@@ -1,25 +1,20 @@
 import "./App.css";
 import Accoutant from "./components/Accoutant";
-import Display from "./components/Display";
+import Details from "./components/Details";
+import AccountDetails from "./components/AccountDetails";
 import { useState, useEffect } from "react";
 import { ToastContainer } from "react-toastify";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
+import NavBar from "./components/Navbar";
+import Totals from "./components/Totals";
 
 function App() {
   const [numbers, setNumbers] = useState([]);
   const [totalBetNum, setTotalBetNum] = useState([]);
   const [totalBetAmt, setTotalBetAmt] = useState(0);
   const [userData, setUserData] = useState([]);
-  const [currentUser, setCurrentUser] = useState("");
-
-  useEffect(() => {
-    const Cuser = JSON.parse(localStorage.getItem("currentUser"));
-    setCurrentUser(Cuser || []);
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("currentUser", JSON.stringify(currentUser));
-  }, [currentUser]);
+  const [currentId, setCurrentId] = useState("");
 
   useEffect(() => {
     const userD = JSON.parse(localStorage.getItem("userData"));
@@ -30,59 +25,54 @@ function App() {
     localStorage.setItem("userData", JSON.stringify(userData));
   }, [userData]);
 
-  useEffect(() => {
-    const totalAmt = JSON.parse(localStorage.getItem("totalAmt"));
-    setTotalBetAmt(totalAmt || 0);
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("totalAmt", JSON.stringify(totalBetAmt));
-  }, [totalBetAmt]);
-
-  useEffect(() => {
-    const numb = JSON.parse(localStorage.getItem("numbers"));
-    setNumbers(numb || []);
-  }, []);
-
-  useEffect(() => {
-    const totalNum = JSON.parse(localStorage.getItem("totalBetNum"));
-    setTotalBetNum(totalNum || []);
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("totalBetNum", JSON.stringify(totalBetNum));
-  }, [totalBetNum]);
-
-  useEffect(() => {
-    localStorage.setItem("numbers", JSON.stringify(numbers));
-  }, [numbers]);
-
   return (
     <div className="App">
       <ToastContainer />
-      <Accoutant
-        numbers={numbers}
-        setNumbers={setNumbers}
-        totalBetNum={totalBetNum}
-        setTotalBetNum={setTotalBetNum}
-        totalBetAmt={totalBetAmt}
-        setTotalBetAmt={setTotalBetAmt}
-        userData={userData}
-        setUserData={setUserData}
-        setCurrentUser={setCurrentUser}
-      />
-      <Display
-        numbers={numbers}
-        setNumbers={setNumbers}
-        totalBetNum={totalBetNum}
-        setTotalBetNum={setTotalBetNum}
-        totalBetAmt={totalBetAmt}
-        setTotalBetAmt={setTotalBetAmt}
-        userData={userData}
-        setUserData={setUserData}
-        currentUser={currentUser}
-        setCurrentUser={setCurrentUser}
-      />
+      <Router>
+        <NavBar />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <Accoutant
+                  numbers={numbers}
+                  setNumbers={setNumbers}
+                  totalBetNum={totalBetNum}
+                  setTotalBetNum={setTotalBetNum}
+                  totalBetAmt={totalBetAmt}
+                  setTotalBetAmt={setTotalBetAmt}
+                  userData={userData}
+                  setUserData={setUserData}
+                  currentId={currentId}
+                  setCurrentId={setCurrentId}
+                />
+              </>
+            }
+          />
+          <Route
+            path="/details"
+            element={<Details userData={userData} setUserData={setUserData} />}
+          />
+          <Route
+            path="/details/:id"
+            element={
+              <AccountDetails
+                userData={userData}
+                setUserData={setUserData}
+                numbers={numbers}
+                setNumbers={setNumbers}
+                totalBetNum={totalBetNum}
+                setTotalBetNum={setTotalBetNum}
+                totalBetAmt={totalBetAmt}
+                setTotalBetAmt={setTotalBetAmt}
+                setCurrentId={setCurrentId}
+              />
+            }
+          />
+          <Route path="/totals" element={<Totals userData={userData} />} />
+        </Routes>
+      </Router>
     </div>
   );
 }

@@ -9,8 +9,6 @@ const Display = ({
   setTotalBetAmt,
   userData,
   setUserData,
-  currentUser,
-  setCurrentUser,
 }) => {
   const [searchValue, setSearchValue] = useState("");
   const [name, setName] = useState("");
@@ -22,17 +20,18 @@ const Display = ({
   //remove item function
   const removeItem = (betnum) => {
     const newNumbers = numbers.filter((num) => num.id !== betnum.id);
-    const copyTotalBetNum = [...totalBetNum];
     let copyTotalBetAmt = totalBetAmt;
     copyTotalBetAmt -= parseInt(betnum.betAmt);
     setTotalBetAmt(copyTotalBetAmt);
-    for (let i = 0; i < copyTotalBetNum.length; i++) {
-      if (copyTotalBetNum[i].betNum === betnum.betNum) {
-        copyTotalBetNum[i].betAmt = (
-          parseInt(copyTotalBetNum[i].betAmt) - parseInt(betnum.betAmt)
+    for (let i = 0; i < totalBetNum.length; i++) {
+      if (totalBetNum[i].betNum === betnum.betNum) {
+        const cloneTotalBetNum = totalBetNum.map((item) => ({ ...item }));
+        cloneTotalBetNum[i].betAmt = (
+          parseInt(cloneTotalBetNum[i].betAmt) - parseInt(betnum.betAmt)
         ).toString();
-        setTotalBetNum(copyTotalBetNum);
-        localStorage.setItem("totalBetNum", JSON.stringify(totalBetNum));
+        setTotalBetNum(cloneTotalBetNum);
+        localStorage.setItem("totalBetNum", JSON.stringify(cloneTotalBetNum));
+        break;
       }
     }
     setNumbers(newNumbers);
@@ -43,42 +42,26 @@ const Display = ({
     setNumbers([]);
     setTotalBetNum([]);
     setTotalBetAmt(0);
-    setCurrentUser("");
   };
 
   //handle save
   const handleSave = () => {
-    let alreadyExit = false;
-    for (let i = 0; i < userData.length; i++) {
-      if (userData[i].name === currentUser.trim()) {
-        userData[i].numbers = numbers;
-        userData[i].totalBetAmt = totalBetAmt;
-        userData[i].totalBetNum = totalBetNum;
-        alreadyExit = true;
-        localStorage.setItem("userData", JSON.stringify(userData));
-        break;
-      }
-    }
-    if (!alreadyExit) {
-      const today = new Date();
-      const userObj = {
-        name: name,
-        numbers: numbers,
-        totalBetNum: totalBetNum,
-        totalBetAmt: totalBetAmt,
-        id: today.getTime(),
-      };
-      const copyUserData = [...userData];
-      copyUserData.splice(0, 0, userObj);
-      setUserData(copyUserData);
-    }
-    handleClearAll();
-    toast.success("သိမ်းပြီးပါပြီ");
+    const today = new Date();
+    const copyUserData = [...userData];
+    const userDataObj = {
+      name,
+      numbers: numbers.slice(),
+      totalBetAmt,
+      stotalBetNum: totalBetNum.slice(),
+      id: today.getTime(),
+    };
+    copyUserData.splice(0, 0, userDataObj);
+    setUserData(copyUserData);
+    toast.success("သိမ်းဆည်းပြီးပါပြီ");
   };
 
   return (
     <div className="container mt-3">
-      <h3 className="text-muted fw-bold mb-3">အမည် - {currentUser} </h3>
       <div className="row">
         <div className="col-md-3 border-end border-success">
           <h3 className="text-muted fw-bold">စာရင်းမှတ်တမ်း</h3>
@@ -143,11 +126,7 @@ const Display = ({
                 ရောင်းကြေးစုစုပေါင်း - {totalBetAmt}Ks
               </p>
             </div>
-            <div className="col">
-              <p className="fw-bold fs-5">
-                ကော်မရှင် - {parseInt(totalBetAmt) * 0.15}Ks
-              </p>
-            </div>
+
             <div className="col">
               <button
                 className="btn btn-danger float-end mb-3"
